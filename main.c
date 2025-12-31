@@ -49,7 +49,8 @@
 #define TIMER_PERIOD_MS    1000
 
 /* Function prototypes */
-static void exampleTask( void * parameters );
+static void task1( void * parameters );
+static void task2( void * parameters );
 static void vTimerCallback( TimerHandle_t xTimer );
 
 /* Timer handle */
@@ -57,18 +58,35 @@ static TimerHandle_t xTimer = NULL;
 
 /*-----------------------------------------------------------*/
 
-static void exampleTask( void * parameters )
+static void task1( void * parameters )
 {
     /* Unused parameters. */
     ( void ) parameters;
 
-    printf( "Task: Started - will print every 100 ticks\n" );
+    printf( "Task1: Started - will print every 100 ticks\n" );
 
     for( ; ; )
     {
-        /* Example Task Code */
-        printf( "Task: Running...\n" );
+        /* Task1 Code */
+        printf( "Task1: Running...\n" );
         vTaskDelay( 100 ); /* delay 100 ticks */
+    }
+}
+
+/*-----------------------------------------------------------*/
+
+static void task2( void * parameters )
+{
+    /* Unused parameters. */
+    ( void ) parameters;
+
+    printf( "Task2: Started - will print every 150 ticks\n" );
+
+    for( ; ; )
+    {
+        /* Task2 Code */
+        printf( "Task2: Running...\n" );
+        vTaskDelay( 150 ); /* delay 150 ticks */
     }
 }
 
@@ -88,26 +106,37 @@ static void vTimerCallback( TimerHandle_t xTimer )
 
 int main( void )
 {
-    static StaticTask_t exampleTaskTCB;
-    static StackType_t exampleTaskStack[ configMINIMAL_STACK_SIZE ];
+    static StaticTask_t task1TCB;
+    static StackType_t task1Stack[ configMINIMAL_STACK_SIZE ];
+    static StaticTask_t task2TCB;
+    static StackType_t task2Stack[ configMINIMAL_STACK_SIZE ];
 
     /* Initialize semihosting */
     extern void initialise_monitor_handles(void);
     initialise_monitor_handles();
 
     printf("===========================================\n");
-    printf("Minimal FreeRTOS Example with Timer\n");
+    printf("Minimal FreeRTOS Example with 2 Tasks + Timer\n");
     printf("Target: ARM Cortex-M3\n");
     printf("===========================================\n\n");
 
-    /* Create the example task */
-    ( void ) xTaskCreateStatic( exampleTask,
-                                "Task",
+    /* Create task1 */
+    ( void ) xTaskCreateStatic( task1,
+                                "Task1",
                                 configMINIMAL_STACK_SIZE,
                                 NULL,
                                 configMAX_PRIORITIES - 1U,
-                                &( exampleTaskStack[ 0 ] ),
-                                &( exampleTaskTCB ) );
+                                &( task1Stack[ 0 ] ),
+                                &( task1TCB ) );
+
+    /* Create task2 */
+    ( void ) xTaskCreateStatic( task2,
+                                "Task2",
+                                configMINIMAL_STACK_SIZE,
+                                NULL,
+                                configMAX_PRIORITIES - 1U,
+                                &( task2Stack[ 0 ] ),
+                                &( task2TCB ) );
 
     /* Create a software timer that calls vTimerCallback every 1000ms */
     xTimer = xTimerCreate( "Timer",
