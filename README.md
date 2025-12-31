@@ -2,6 +2,8 @@
 
 Minimal, readable FreeRTOS for ARM Cortex-M3 with all unused `#ifdef` branches removed.
 
+**Adapted from FreeRTOS 202406.04 LTS**
+
 ## Features
 
 ✅ **Flat structure** - All files in one directory
@@ -193,7 +195,7 @@ main()
 ## How It Was Created
 
 ### 1. Extracted Minimal Files
-Copied from FreeRTOS-Kernel v11.1.0:
+Copied from FreeRTOS 202406.04 LTS:
 - Core: `tasks.c`, `queue.c`, `list.c`, `timers.c`
 - Port: ARM Cortex-M3 (`port.c`, `portmacro.h`)
 - Memory: `heap_4.c`
@@ -285,7 +287,7 @@ FreeRTOS-Clean/
 
 ## License
 
-Based on FreeRTOS Kernel V11.1.0
+Based on FreeRTOS 202406.04 LTS
 
 - **License:** MIT
 - **Copyright:** (C) 2021 Amazon.com, Inc. or its affiliates
